@@ -687,6 +687,9 @@ void CFilepathEdit::SetBackColor(COLORREF rgb)
 	
 	//redraw
 	Invalidate(TRUE);
+
+	if (GetParent())
+		GetParent()->InvalidateRect(nullptr, false);
 }
 
 /**
