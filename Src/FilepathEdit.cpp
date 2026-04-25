@@ -15,7 +15,6 @@
 #include "FilepathEdit.h"
 #include "ClipBoard.h"
 #include "FileOrFolderSelect.h"
-#include "Win_VersionHelper.h"
 #include "paths.h"
 #include "cecolor.h"
 
@@ -41,6 +40,8 @@ BEGIN_MESSAGE_MAP(CFilepathEdit, CEdit)
 	ON_COMMAND(ID_EDIT_SELECT_ALL, OnEditSelectAll)
 	ON_COMMAND_RANGE(ID_DIR_ITEM_RENAME, ID_DIR_ITEM_RENAME, OnContextMenuSelected)
 	ON_COMMAND_RANGE(ID_EDITOR_COPY_PATH, ID_EDITOR_SELECT_FILE, OnContextMenuSelected)
+	ON_COMMAND_RANGE(ID_EDITOR_RECENT_FIRST, ID_EDITOR_RECENT_LAST, OnContextMenuSelected)
+	ON_COMMAND_RANGE(ID_EDITOR_CLIPBOARD_FIRST, ID_EDITOR_CLIPBOARD_LAST, OnContextMenuSelected)
 END_MESSAGE_MAP()
 
 
@@ -248,7 +249,8 @@ void CFilepathEdit::OnContextMenu(CWnd* pWnd, CPoint point)
 		if (!m_bActive)
 			SetFocus();
 
-		if (point.x == -1 && point.y == -1){
+		if (point.x == -1 && point.y == -1)
+		{
 			//keystroke invocation
 			CRect rect;
 			GetClientRect(rect);
@@ -274,8 +276,17 @@ void CFilepathEdit::OnContextMenu(CWnd* pWnd, CPoint point)
 		if (!m_bEnabledFileSelection && !m_bEnabledFolderSelection)
 		{
 			pPopup->EnableMenuItem(ID_EDITOR_SELECT_FILE, MF_GRAYED);
+			pPopup->EnableMenuItem(ID_EDITOR_OPEN_CLIPBOARD, MF_GRAYED);
 			pPopup->EnableMenuItem(ID_EDITOR_EDIT_PATH, MF_GRAYED);
 		}
+
+		// Allow parent to customize the context menu
+		NMHEADERBARCONTEXTMENU nmctx;
+		nmctx.hdr.hwndFrom = m_hWnd;
+		nmctx.hdr.idFrom = GetDlgCtrlID();
+		nmctx.hdr.code = EN_USER_CUSTOMIZE_CONTEXT_MENU;
+		nmctx.pMenu = pPopup;
+		GetParent()->SendMessage(WM_NOTIFY, nmctx.hdr.idFrom, reinterpret_cast<LPARAM>(&nmctx));
 
 		// invoke context menu
 		pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
@@ -417,6 +428,20 @@ void CFilepathEdit::OnEditSelectAll()
 
 void CFilepathEdit::OnContextMenuSelected(UINT nID)
 {
+	// Forward Recent/Clipboard commands to parent via notification
+	if ((nID >= ID_EDITOR_RECENT_FIRST && nID <= ID_EDITOR_RECENT_LAST) ||
+		(nID >= ID_EDITOR_CLIPBOARD_FIRST && nID <= ID_EDITOR_CLIPBOARD_LAST) ||
+		nID == ID_EDITOR_OPEN_CLIPBOARD)
+	{
+		NMMENUITEMSELECTED nmhdr;
+		nmhdr.hdr.hwndFrom = m_hWnd;
+		nmhdr.hdr.idFrom = GetDlgCtrlID();
+		nmhdr.hdr.code = EN_USER_MENU_ITEM_SELECTED;
+		nmhdr.menuId = nID;
+		GetParent()->SendMessage(WM_NOTIFY, nmhdr.hdr.idFrom, reinterpret_cast<LPARAM>(&nmhdr));
+		return;
+	}
+
 	// compute the beginning of the text to copy (in OriginalText)
 	size_t iBegin = 0;
 	switch (nID)
@@ -487,7 +512,7 @@ void CFilepathEdit::OnContextMenuSelected(UINT nID)
 	default:
 		return;
 	}
-	
+
 	CustomCopy(iBegin);
 }
 
@@ -517,25 +542,30 @@ BOOL CFilepathEdit::PreTranslateMessage(MSG *pMsg)
 				String windowText = m_sOriginalText;
 				if (!(text == orgtext.c_str() || text.IsEmpty()))
 				{
-					bool existing = paths::DoesPathExist((const tchar_t *)text);
-					if (existing)
+					String path = text;
+					bool existing = true;
+					if (!paths::IsURLorCLSID(path))
 					{
-						if (m_bEnabledFileSelection && paths::IsDirectory((const tchar_t*)text))
+						existing = paths::DoesPathExist(path);
+						if (existing)
 						{
-							existing = false;
-							windowText = strutils::format_string1(_("File not found: %1"), (const tchar_t*)text);
+							if (m_bEnabledFileSelection && paths::IsDirectory(path))
+							{
+								existing = false;
+								windowText = strutils::format_string1(_("File not found: %1"), path);
+							}
+							if (m_bEnabledFolderSelection && !paths::IsDirectory(path))
+							{
+								existing = false;
+								windowText = strutils::format_string1(_("Folder not found: %1"), path);
+							}
 						}
-						if (m_bEnabledFolderSelection && !paths::IsDirectory((const tchar_t*)text))
-						{
-							existing = false;
-							windowText = _("Folder does not exist.");
-						}
+						else
+							windowText = GetSysError();
 					}
-					else
-						windowText = GetSysError();
 					if (existing)
 					{
-						m_sFilepath = static_cast<const tchar_t*>(text);
+						m_sFilepath = path;
 						GetParent()->PostMessage(WM_COMMAND, MAKEWPARAM(GetDlgCtrlID(), EN_USER_FILE_SELECTED), (LPARAM)m_hWnd);
 					}
 				}
