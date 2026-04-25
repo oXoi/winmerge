@@ -327,18 +327,37 @@ void CFilepathEdit::OnPaint()
 	if (!m_bInEditing)
 	{
 		CClientDC dc(this);
-		Gdiplus::Graphics graphics(dc);
-		graphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
 		CRect rc = GetMenuCharRect(&dc);
+
+		// Use memory DC for double buffering to reduce flicker
+		CDC memDC;
+		memDC.CreateCompatibleDC(&dc);
+		CBitmap memBitmap;
+		memBitmap.CreateCompatibleBitmap(&dc, rc.Width(), rc.Height());
+		CBitmap* pOldBitmap = memDC.SelectObject(&memBitmap);
+
+		// Fill background
+		memDC.FillSolidRect(0, 0, rc.Width(), rc.Height(), m_crBackGnd);
+
+		// Draw hamburger menu
+		Gdiplus::Graphics graphics(memDC.GetSafeHdc());
+		graphics.SetSmoothingMode(Gdiplus::SmoothingModeAntiAlias);
+
 		Gdiplus::Pen pen(Gdiplus::Color(255, GetRValue(m_crText), GetGValue(m_crText), GetBValue(m_crText)), PointToPixel(dc, 0.75f));
 		const int lineCount = 3;
 		const float spacing = PointToPixel(dc, 2.25f);
 		const int padding = static_cast<int>(PointToPixel(dc, 0.75f));
+
 		for (int i = 0; i < lineCount; ++i)
 		{
-			float y = rc.top + (rc.Height() - (lineCount - 1) * spacing) / 2 + i * spacing;
-			graphics.DrawLine(&pen, static_cast<float>(rc.left + padding), y, static_cast<float>(rc.right - padding), y);
+			float y = (rc.Height() - (lineCount - 1) * spacing) / 2 + i * spacing;
+			graphics.DrawLine(&pen, static_cast<float>(padding), y, static_cast<float>(rc.Width() - padding), y);
 		}
+
+		// Copy to screen
+		dc.BitBlt(rc.left, rc.top, rc.Width(), rc.Height(), &memDC, 0, 0, SRCCOPY);
+
+		memDC.SelectObject(pOldBitmap);
 	}
 }
 
