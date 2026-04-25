@@ -484,7 +484,12 @@ void CEditorFilePathBar::OnClipboardItemSelected(int pane, int itemIndex)
 	}
 	else if (m_folderSelectedCallbackfunc)
 	{
-		const String path = clipItem.previewText;
+		String path = strutils::trim_ws(clipItem.previewText);
+		if (!path.empty() && path[0] == '"')
+		{
+			// Remove surrounding quotes if present
+			path = path.substr(1, path.length() - 2);
+		}
 		paths::PATH_EXISTENCE pathExists2 = paths::DoesPathExist(path);
 		if (pathExists2 == paths::DOES_NOT_EXIST || pathExists2 == paths::IS_EXISTING_FILE)
 		{
