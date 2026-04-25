@@ -121,6 +121,7 @@ namespace ClipboardHistory
 							if (dataPackageView.Contains(StandardDataFormats::Bitmap()))
 							{
 								item.pBitmapTempFile = CreateTempBitmapFile(dataPackageView);
+								item.previewText = _T("[") + _("Image") + _T("]");
 							}
 							if (!item.pTextTempFile && !item.pBitmapTempFile)
 							{

@@ -304,7 +304,7 @@ bool CImgMergeFrame::ChangeFile(int nBuffer, const String& path, const String& d
 		RevokeDragDrop(m_pImgMergeWindow->GetPaneHWND(pane));
 
 	m_filePaths[nBuffer] = path;
-	m_nBufferType[nBuffer] = BUFFERTYPE::NORMAL;
+	m_nBufferType[nBuffer] = description.empty() ? BUFFERTYPE::NORMAL : BUFFERTYPE::NORMAL_NAMED;
 	m_strDesc[nBuffer] = description;
 	int nActivePane = m_pImgMergeWindow->GetActivePane();
 
