@@ -420,6 +420,11 @@ void CDirDoc::Rescan()
 		PathContext paths = m_pCtxt->GetNormalizedPaths();
 		paths.SetPath(pane, sFolderpath);
 		m_strDesc[pane].clear();
+		if (m_pTempPathContext != nullptr)
+		{
+			m_pTempPathContext->m_strDisplayRoot[pane].clear();
+			m_pTempPathContext->m_strRoot[pane].clear();
+		}
 		m_pDirView->SetFocus();
 		InitCompare(paths, m_pCtxt->m_bRecursive, nullptr);
 		Rescan();
