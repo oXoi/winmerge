@@ -43,7 +43,7 @@ Please submit bug reports to our bug-tracker.
   * Chinese Simplified (PR #3307,#3331)
   * French (PR #3312)
   * German (PR #3329)
-  * Italian (PR #3335)
+  * Italian (PR #3335,#3342)
   * Korean (PR #3334)
   * Lithuanian (PR #3308)
   * Russian (PR #3309)

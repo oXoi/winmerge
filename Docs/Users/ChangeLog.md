@@ -1,6 +1,6 @@
 # Change log
 
-## What Is New in 2.16.56
+## WinMerge 2.16.56 - 2026-04-27
 
 ### General
 
@@ -29,7 +29,7 @@
   * Chinese Simplified (PR #3307,#3331)
   * French (PR #3312)
   * German (PR #3329)
-  * Italian (PR #3335)
+  * Italian (PR #3335,#3342)
   * Korean (PR #3334)
   * Lithuanian (PR #3308)
   * Russian (PR #3309)
