@@ -6,8 +6,7 @@
 
 * Show error message when entering invalid path in header bar (PR #3322)
 
-* Add recent items and clipboard history to header bar menuclipboard compare
-    header bar recent files or folders (PR #3330)
+* Add recent items and clipboard history to header bar menu (PR #3330)
 
 ### Folder compare
 
@@ -26,7 +25,7 @@
 ### Translations
 
 * Translation updates:
-  * Brazilian (PR #3328)
+  * Brazilian (PR #3328,#3341)
   * Chinese Simplified (PR #3307,#3331)
   * French (PR #3312)
   * German (PR #3329)
