@@ -15798,7 +15798,7 @@ msgstr "Funzioni"
 #. type: Content of: <article><section><section><section><variablelist><varlistentry><term>
 #: English/Filters.xml:874
 msgid "<function>lineCount</function>(<replaceable>content</replaceable>)"
-msgstr "<function>lineCount<function>(<replaceable>contenuto</replaceable>)"
+msgstr "<function>lineCount</function>(<replaceable>contenuto</replaceable>)"
 
 #. type: Content of: <article><section><section><section><variablelist><varlistentry><listitem><para>
 #: English/Filters.xml:875
@@ -16430,7 +16430,7 @@ msgid ""
 "replaceable>, ...), <function>logInfo</function>(<replaceable>value1</"
 "replaceable>, <replaceable>value2</replaceable>, ...)"
 msgstr ""
-"<function>logError<function>(<replaceable>valore1</replaceable>, "
+"<function>logError</function>(<replaceable>valore1</replaceable>, "
 "<replaceable>value2</replaceable>, ...), logWarn(<replaceable>value1</"
 "replaceable>, <replaceable>value2</replaceable>, ...), "
 "logInfo(<replaceable>value1</replaceable>, <replaceable>value2</"
@@ -16538,7 +16538,7 @@ msgid ""
 "<function>ifEach</function>(<replaceable>conditionArray</replaceable>, "
 "<replaceable>trueValue</replaceable>, <replaceable>falseValue</replaceable>)"
 msgstr ""
-"<function>ifEach<function>(<replaceable>conditionArray</replaceable>, "
+"<function>ifEach</function>(<replaceable>conditionArray</replaceable>, "
 "<replaceable>trueValue</replaceable>, <replaceable>falseValue</replaceable>)"
 
 #. type: Content of: <article><section><section><section><variablelist><varlistentry><listitem><para>
