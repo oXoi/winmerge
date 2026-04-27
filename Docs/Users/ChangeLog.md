@@ -26,7 +26,7 @@
 
 * Translation updates:
   * Brazilian (PR #3328,#3341)
-  * Chinese Simplified (PR #3307,#3331)
+  * Chinese Simplified (PR #3307,#3331,#3344)
   * French (PR #3312)
   * German (PR #3329)
   * Italian (PR #3335,#3342)
