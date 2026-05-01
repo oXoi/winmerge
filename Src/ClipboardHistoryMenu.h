@@ -18,10 +18,13 @@ namespace ClipboardHistoryMenu
      * @param [in] idLast Last menu command ID
      * @return Number of items added to the menu
      */
-    int PopulateMenu(
-        CMenu* pMenu,
-        const std::vector<ClipboardHistory::Item>& items,
-        UINT idFirst,
-        UINT idLast
-    );
+    int PopulateMenu(CMenu* pMenu, const std::vector<ClipboardHistory::Item>& items, UINT idFirst, UINT idLast);
+
+    /**
+     * @brief Build a URL for a clipboard history item
+     * @param [in] items Clipboard history items
+     * @param [in] index Index of the item
+     * @return URL string for the clipboard item
+     */
+	String BuildClipboardItemUrl(const std::vector<ClipboardHistory::Item>& items, size_t index);
 }

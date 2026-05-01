@@ -55,4 +55,27 @@ namespace ClipboardHistoryMenu
 
 		return itemsAdded;
 	}
+
+	String BuildClipboardItemUrl(const std::vector<ClipboardHistory::Item>& items, size_t index)
+	{
+		if (index < 0 || index >= items.size())
+			return _T("");
+
+		const auto& item = items[index];
+
+		// Generate clipboard URL (1-based index for user-facing URL)
+		String url = _T("clipboard://");
+		if (index == 0)
+			url += _T("latest");
+		else if (index == 1)
+			url += _T("previous");
+		else
+			url += strutils::to_str(index + 1);
+
+		// Add format parameter for images
+		if (item.pBitmapTempFile)
+			url += _T("?format=png#type=image");
+
+		return url;
+	}
 }

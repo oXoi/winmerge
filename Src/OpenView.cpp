@@ -688,23 +688,8 @@ void COpenView::OnSelectClipboardItem(UINT nId)
 	if (itemIndex < 0 || static_cast<size_t>(itemIndex) >= m_cachedClipboardItems.size() || pathIndex < 0 || pathIndex >= std::size(m_strPath))
 		return;
 
-	const auto& item = m_cachedClipboardItems[itemIndex];
-
-	// Generate clipboard URL (1-based index for user-facing URL)
-	String url = _T("clipboard://");
-	if (itemIndex == 0)
-		url += _T("latest");
-	else if (itemIndex == 1)
-		url += _T("previous");
-	else
-		url += strutils::to_str(itemIndex + 1);
-
-	// Add format parameter for images
-	if (item.pBitmapTempFile)
-		url += _T("?format=png#type=image");
-
 	// Set the URL to the path field
-	m_strPath[pathIndex] = url;
+	m_strPath[pathIndex] = ClipboardHistoryMenu::BuildClipboardItemUrl(m_cachedClipboardItems, itemIndex);
 	UpdateData(FALSE);
 	UpdateButtonStates();
 }
